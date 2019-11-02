@@ -17,6 +17,9 @@ var books = [
     { name: 'Name of the Wind', genre: 'Fantasy', id: '1', authorid: '1' },
     { name: 'The final Empire', genre: 'Fantasy', id: '2', authorid: '2' },
     { name: 'The Long Earth', genre: 'Sci-Fi', id: '3', authorid: '3' },
+    { name: 'The Hero of Ages', genre: 'Fantasy', id: '4', authorid: '2' },
+    { name: 'The Colour of Magic', genre: 'Fantasy', id: '5', authorid: '3' },
+    { name: 'The Light Fantastic', genre: 'Fantasy', id: '6', authorid: '3' },
 ]
 
 var authors = [
@@ -47,6 +50,13 @@ const AuthorType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         age: { type: GraphQLInt },
+        books: {
+            type: new GraphQLList(BookType),
+            resolve(parent, args) {
+                const _books = _.filter(books, { authorid: parent.id })
+                return _books
+            }
+        }
     })
 })
 
@@ -72,7 +82,22 @@ const RootQuery = new GraphQLObjectType({
                 return _author
 
             }
+        },
+        books: {
+            type: new GraphQLList(BookType),
+            resolve(parent, args) {
+                return books
+            }
+
+        },
+        authors: {
+            type: new GraphQLList(AuthorType),
+            resolve(parent, args) {
+                return authors
+            }
         }
+
+
 
     }
 })
